@@ -3,6 +3,7 @@ import {
   serializeTemperatureReading,
   type SerializedTemperatureReading,
 } from "../utils/serialize-temperature-reading.js";
+import type { NewTemperatureReadingInput } from "./mock-temperature.service.js";
 
 const DEFAULT_LIMIT = 50;
 
@@ -14,4 +15,12 @@ export async function getLatestTemperatureReadings(
     .limit(limit);
 
   return readings.map(serializeTemperatureReading).reverse();
+}
+
+export async function createTemperatureReading(
+  input: NewTemperatureReadingInput,
+): Promise<SerializedTemperatureReading> {
+  const reading = await TemperatureReadingModel.create(input);
+
+  return serializeTemperatureReading(reading);
 }
