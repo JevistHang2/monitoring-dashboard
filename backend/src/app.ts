@@ -1,26 +1,20 @@
 import express from "express";
-import { TemperatureReadingModel } from "./models/temperature-reading.model.js";
-import { serializedTemperatureReading } from "./utils/serialize-temperature-reading.js";
+import { temperatureDataRouter } from "./routes/temperature-data.routes.js";
+import { notFound } from "./middleware/not-found.js";
+import { errorHandler } from "./middleware/error-handler.js";
 
 export const app = express();
 
 app.use(express.json());
 
+// Check if the server is healthy
 app.get("/health", (_req, res) => {
   res.status(200).json({ status: "ok" });
 });
 
-app.post("/test-temperature-reading", async (_req, res, next) => {
-  try {
-    const temperatureReading = await TemperatureReadingModel.create({
-      created_at: new Date(),
-      value: 72,
-    });
+// Temperature data routes
+app.use("/api", temperatureDataRouter);
 
-    res.status(201).json(serializedTemperatureReading(temperatureReading));
-  } catch (error) {
-    next(error);
-  }
-});
-
-export default app;
+// Error handling middleware
+app.use(notFound);
+app.use(errorHandler);

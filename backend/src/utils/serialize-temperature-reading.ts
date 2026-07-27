@@ -5,7 +5,7 @@ export type SerializedTemperatureReading = {
   value: number;
 };
 
-export function serializedTemperatureReading(
+export function serializeTemperatureReading(
   temperatureReading: TemperatureReading,
 ): SerializedTemperatureReading {
   return {
