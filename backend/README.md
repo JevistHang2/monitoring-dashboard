@@ -171,7 +171,7 @@ Flow:
 generate mock temperature -> save to MongoDB -> broadcast new-data
 ```
 
-Mock values are generated between `-10` and `45` degrees Celsius.
+Mock temperature values are generated between `1` and `100`.
 
 ## Database
 
