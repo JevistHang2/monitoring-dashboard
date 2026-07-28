@@ -1,10 +1,14 @@
+import { AppShell } from "@/components/layout/app-shell";
+
 export default function Home() {
   return (
-    <main className="min-h-screen bg-background p-8 text-foreground">
-      <h1 className="text-2xl font-semibold">
-        Temperature Monitoring Dashboard
-      </h1>
-      <p className="mt-2 text-muted-foreground">Frontend setup is working.</p>
-    </main>
+    <AppShell>
+      <section className="rounded-lg border bg-card p-6 text-card-foreground">
+        <h2 className="text-lg font-semibold">Dashboard content</h2>
+        <p className="mt-2 text-sm text-muted-foreground">
+          The dashboard template will be built inside this area.
+        </p>
+      </section>
+    </AppShell>
   );
 }
