@@ -3,8 +3,8 @@ export type NewTemperatureReadingInput = {
   value: number;
 };
 
-const MIN_TEMPERATURE = -10;
-const MAX_TEMPERATURE = 45;
+const MIN_TEMPERATURE = 1;
+const MAX_TEMPERATURE = 100;
 
 export function generateMockTemperatureReading(
   now = new Date(),
