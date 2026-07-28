@@ -11,6 +11,11 @@ import {
 import { formatReadingTime } from "@/lib/timezone";
 import type { TemperatureReading, Timezone } from "@/types/temperature";
 
+import {
+  TEMPERATURE_MAX_VALUE,
+  TEMPERATURE_MIN_VALUE,
+} from "@/constants/temperature-constant";
+
 type TemperatureLineChartProps = {
   readings: TemperatureReading[];
   timezone: Timezone;
@@ -50,7 +55,12 @@ export function TemperatureLineChart({
             axisLine={false}
             tickMargin={8}
           />
-          <YAxis tickLine={false} axisLine={false} tickMargin={8} />
+          <YAxis
+            domain={[TEMPERATURE_MIN_VALUE, TEMPERATURE_MAX_VALUE]}
+            tickLine={false}
+            axisLine={false}
+            tickMargin={8}
+          />
           <ChartTooltip content={<ChartTooltipContent />} />
           <Line
             dataKey="value"

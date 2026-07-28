@@ -4,6 +4,9 @@ export const MAX_READINGS = 50;
 
 export const DEFAULT_TIMEZONE: Timezone = "Asia/Jakarta";
 
+export const TEMPERATURE_MIN_VALUE = 1;
+export const TEMPERATURE_MAX_VALUE = 100;
+
 export const TIMEZONE_OPTIONS: Array<{
   label: string;
   value: Timezone;
