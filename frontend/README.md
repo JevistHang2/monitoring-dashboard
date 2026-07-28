@@ -1,36 +1,103 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Monitoring Dashboard Frontend
 
-## Getting Started
+Next.js 14 frontend for the real-time temperature monitoring dashboard.
 
-First, run the development server:
+## Tech Stack
+
+- Next.js 14 App Router
+- TypeScript
+- Tailwind CSS
+- shadcn/ui
+- Recharts through shadcn chart components
+- Socket.IO Client
+
+## Setup
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Create `.env.local`:
+
+```env
+NEXT_PUBLIC_API_URL=http://localhost:4000
+NEXT_PUBLIC_SOCKET_URL=http://localhost:4000
+```
+
+Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```text
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The root route redirects to:
 
-## Learn More
+```text
+http://localhost:3000/dashboard
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Scripts
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm run dev           # start local development server
+npm run build         # create production build
+npm run start         # run production build locally
+npm run lint          # run Next.js ESLint checks
+npm run format        # format files with Prettier
+npm run format:check  # check formatting without writing
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Frontend Structure
 
-## Deploy on Vercel
+```text
+src/
+  api/          # Backend API helpers
+  app/          # Next.js App Router routes and layouts
+  components/   # Dashboard, layout, feedback, and shadcn UI components
+  constants/    # Environment URLs, API routes, dashboard constants
+  lib/          # Reusable helpers such as timezone and response handling
+  types/        # TypeScript API and dashboard data contracts
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Data Flow
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Initial data is fetched server-side in the dashboard route from:
+
+```text
+GET /api/data
+```
+
+After the page loads, the client dashboard connects to Socket.IO and listens for:
+
+```text
+new-data
+```
+
+New readings are appended to local state, then metrics, charts, and the readings table update automatically.
+
+## Timezone Display
+
+The dashboard keeps timestamps as UTC ISO strings and formats them only for display. Supported timezones:
+
+- `Asia/Jakarta`
+- `Asia/Singapore`
+- `Australia/Sydney`
+
+## Formatting
+
+This project uses Prettier with the Tailwind CSS plugin.
+
+Before committing frontend changes:
+
+```bash
+npm run lint
+npm run format:check
+```
