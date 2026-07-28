@@ -83,6 +83,19 @@ new-data
 
 New readings are appended to local state, then metrics, charts, and the readings table update automatically.
 
+## Temperature Range
+
+The mock backend generates temperature values from `1` to `100`.
+
+The frontend keeps matching constants for chart display:
+
+```ts
+TEMPERATURE_MIN_VALUE = 1;
+TEMPERATURE_MAX_VALUE = 100;
+```
+
+Both the line chart and bar chart use this range for the Y-axis domain, so the visual scale stays stable while live readings arrive.
+
 ## Timezone Display
 
 The dashboard keeps timestamps as UTC ISO strings and formats them only for display. Supported timezones:
