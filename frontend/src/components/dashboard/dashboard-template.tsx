@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 
 type DashboardTemplateProps = {
+  notice?: ReactNode;
   toolbar: ReactNode;
   metrics: ReactNode;
   lineChart: ReactNode;
@@ -9,6 +10,7 @@ type DashboardTemplateProps = {
 };
 
 export function DashboardTemplate({
+  notice,
   toolbar,
   metrics,
   lineChart,
@@ -17,6 +19,8 @@ export function DashboardTemplate({
 }: DashboardTemplateProps) {
   return (
     <div className="flex flex-col gap-6">
+      {notice && <section>{notice}</section>}
+
       <section className="flex flex-col gap-4 rounded-lg border bg-card p-4 text-card-foreground sm:flex-row sm:items-center sm:justify-between">
         {toolbar}
       </section>

@@ -11,6 +11,7 @@ import { formatReadingDateTime } from "@/lib/timezone";
 import type { TemperatureReading, Timezone } from "@/types/temperature";
 
 import { MAX_READINGS } from "@/constants/temperature-constant";
+import { formatTemperature } from "@/lib/temperature-format";
 
 type ReadingsTableProps = {
   readings: TemperatureReading[];
@@ -40,7 +41,7 @@ export function ReadingsTable({ readings, timezone }: ReadingsTableProps) {
         </p>
       </div>
 
-      <div className="overflow-x-auto">
+      <div className="max-h-96 overflow-auto">
         <Table>
           <TableHeader>
             <TableRow>
@@ -56,7 +57,7 @@ export function ReadingsTable({ readings, timezone }: ReadingsTableProps) {
                   {formatReadingDateTime(reading.created_at, timezone)}
                 </TableCell>
                 <TableCell className="text-right font-medium">
-                  {reading.value} C
+                  {formatTemperature(reading.value)}
                 </TableCell>
               </TableRow>
             ))}
