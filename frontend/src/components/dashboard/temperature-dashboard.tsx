@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Clock, Thermometer, TrendingDown, TrendingUp } from "lucide-react";
 
 import { ConnectionStatus } from "@/components/dashboard/connection-status";
@@ -23,6 +23,7 @@ import type {
 } from "@/types/temperature";
 import { ErrorState } from "../feedback/error-state";
 import { formatReadingTime } from "@/lib/timezone";
+import { createSocket } from "@/lib/socket";
 
 type TemperatureDashboardProps = {
   initialReadings: TemperatureReading[];
@@ -34,10 +35,41 @@ export function TemperatureDashboard({
   initialErrorMessage,
 }: TemperatureDashboardProps) {
   const [timezone, setTimezone] = useState<Timezone>(DEFAULT_TIMEZONE);
-  const [connectionStatus] = useState<SocketConnectionStatus>("disconnected");
-  const [readings] = useState<TemperatureReading[]>(
+  const [connectionStatus, setConnectionStatus] =
+    useState<SocketConnectionStatus>("disconnected");
+  const [readings, setReadings] = useState<TemperatureReading[]>(
     initialReadings.slice(-MAX_READINGS),
   );
+
+  useEffect(() => {
+    const socket = createSocket();
+
+    socket.on("connect", () => {
+      setConnectionStatus("connected");
+    });
+
+    socket.on("disconnect", () => {
+      setConnectionStatus("disconnected");
+    });
+
+    socket.io.on("reconnect_attempt", () => {
+      setConnectionStatus("reconnecting");
+    });
+
+    socket.on("new-data", (reading) => {
+      setReadings((currentReadings) =>
+        [...currentReadings, reading].slice(-MAX_READINGS),
+      );
+    });
+
+    return () => {
+      socket.off("connect");
+      socket.off("disconnect");
+      socket.off("new-data");
+      socket.io.off("reconnect_attempt");
+      socket.disconnect();
+    };
+  }, []);
 
   const metrics = useMemo(() => {
     if (readings.length === 0) {

@@ -7,3 +7,7 @@ export type Timezone = "Asia/Jakarta" | "Asia/Singapore" | "Australia/Sydney";
 
 export type SocketConnectionStatus =
   "connected" | "disconnected" | "reconnecting";
+
+export type ServerToClientEvents = {
+  "new-data": (reading: TemperatureReading) => void;
+};
