@@ -16,13 +16,19 @@ type TimezoneSelectProps = {
 };
 
 export function TimezoneSelect({ value, onChange }: TimezoneSelectProps) {
+  const selectedTimezone = TIMEZONE_OPTIONS.find(
+    (timezone) => timezone.value === value,
+  );
+
   return (
     <Select
       value={value}
       onValueChange={(nextValue) => onChange(nextValue as Timezone)}
     >
       <SelectTrigger className="w-full sm:w-56">
-        <SelectValue placeholder="Select timezone" />
+        <SelectValue placeholder="Select timezone">
+          {selectedTimezone?.label}
+        </SelectValue>
       </SelectTrigger>
 
       <SelectContent>
