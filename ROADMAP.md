@@ -45,9 +45,9 @@ README.md
 
 - [x] Add `cors`, `dotenv`, `mongoose`, `socket.io`, and a scheduler such as `node-cron`.
 - [x] Add TypeScript tooling: `typescript`, `tsx`, `@types/node`, `@types/express`, and `@types/cors`.
-- [ ] Add a test stack such as Vitest plus Supertest, with TypeScript test support.
+- [x] Add a backend test stack with Vitest, Supertest, and TypeScript test support.
 - [x] Add development scripts for `dev`, `build`, and `start`.
-- [ ] Replace the placeholder `test` script after adding the backend test stack.
+- [x] Replace the placeholder `test` script after adding the backend test stack.
 - [x] Create a strict `tsconfig.json` with an output directory such as `dist/`.
 
 ### Server and configuration
@@ -160,7 +160,7 @@ generate-temperature-reading.job.ts
 5. [x] Implement `mock-temperature.service.ts`.
 6. [x] Implement `socket.ts` and the `generate-temperature-reading.job.ts` scheduler.
 7. [x] Connect the job to the database insert, then broadcast only after a successful insert.
-8. [ ] Add integration tests using `test-app.ts` without starting the real scheduler.
+8. [x] Add route tests without starting the real server or scheduler.
 
 ### Important separation rules
 
@@ -314,7 +314,7 @@ export type ApiResponse<T> = {
 ```
 
 - [x] Type the Socket.IO event map so `new-data` receives a `TemperatureReading`.
-- [ ] If both applications become a monorepo, consider a shared `packages/types` workspace package.
+- [ ] Optional future improvement: if the API contract grows, consider a shared `packages/types` workspace package.
 - [x] Otherwise, keep mirrored types and document that the backend API response is the source of truth.
 
 ## Phase 4 - Frontend dashboard
@@ -417,8 +417,8 @@ Deployment note:
 - [x] Add the public frontend URL.
 - [x] Add the public backend URL.
 - [x] Explain the approach, timezone strategy, assumptions, and challenges.
-- [ ] Add screenshots or a short demo GIF if useful.
-- [ ] Confirm the repository contains frontend, backend, README, and tests.
+- [ ] Optional submission polish: add screenshots or a short demo GIF if useful.
+- [x] Confirm the repository contains frontend, backend, README, roadmap, deployment notes, and tests.
 
 ## Suggested implementation order
 
