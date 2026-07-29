@@ -60,6 +60,8 @@ npm run start         # run production build locally
 npm run lint          # run Next.js ESLint checks
 npm run format        # format files with Prettier
 npm run format:check  # check formatting without writing
+npm run test          # run frontend tests
+npm run test:watch    # run frontend tests in watch mode
 ```
 
 ## Deployment
@@ -135,3 +137,20 @@ Before committing frontend changes:
 npm run lint
 npm run format:check
 ```
+
+## Testing
+
+Tests use Vitest, Testing Library, and jsdom.
+
+Run tests:
+
+```bash
+npm run test
+```
+
+Current coverage:
+
+- Temperature formatting
+- Timezone formatting
+- Timezone select display label
+- Timezone select change handler
