@@ -26,6 +26,13 @@ NEXT_PUBLIC_API_URL=http://localhost:4000
 NEXT_PUBLIC_SOCKET_URL=http://localhost:4000
 ```
 
+For production, Vercel uses:
+
+```env
+NEXT_PUBLIC_API_URL=https://monitoring-dashboard-production-3460.up.railway.app
+NEXT_PUBLIC_SOCKET_URL=https://monitoring-dashboard-production-3460.up.railway.app
+```
+
 Run the development server:
 
 ```bash
@@ -53,6 +60,20 @@ npm run start         # run production build locally
 npm run lint          # run Next.js ESLint checks
 npm run format        # format files with Prettier
 npm run format:check  # check formatting without writing
+```
+
+## Deployment
+
+The frontend is deployed on Vercel:
+
+```text
+https://monitoring-dashboard-lemon.vercel.app
+```
+
+The deployed frontend connects to the Railway backend:
+
+```text
+https://monitoring-dashboard-production-3460.up.railway.app
 ```
 
 ## Frontend Structure
