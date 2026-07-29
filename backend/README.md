@@ -75,7 +75,20 @@ Run the built server:
 npm run start
 ```
 
-Tests are not implemented yet.
+Run tests:
+
+```bash
+npm run test
+```
+
+The backend test suite uses Vitest and Supertest.
+
+Current coverage:
+
+- Mock temperature generation returns values in the assignment range.
+- Serialized readings return `created_at` as a UTC ISO string.
+- `GET /api/data` returns the expected response wrapper, array, and fields.
+- The route test mocks the data service so it does not require a live database.
 
 ## API Response Format
 
