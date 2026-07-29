@@ -12,14 +12,22 @@ async function startServer() {
 
   setupSocket(httpServer);
 
-  const temperatureJob = startGenerateTemperatureReadingJob();
+  const temperatureJob = env.enableGenerator
+    ? startGenerateTemperatureReadingJob()
+    : null;
+
+  if (temperatureJob) {
+    console.log("Temperature generator job is enabled");
+  } else {
+    console.log("Temperature generator job is disabled");
+  }
 
   httpServer.listen(env.port, () => {
     console.log(`Server is running on port ${env.port}`);
   });
 
   process.on("SIGINT", async () => {
-    temperatureJob.stop();
+    temperatureJob?.stop();
     httpServer.close(async () => {
       await disconnectFromDatabase();
       process.exit(0);

@@ -50,6 +50,7 @@ PORT=4000
 MONGODB_URI=mongodb://localhost:27017/monitoring-dashboard
 FRONTEND_URL=http://localhost:3000
 NODE_ENV=development
+ENABLE_GENERATOR=true
 ```
 
 Do not commit `.env`.
@@ -164,6 +165,14 @@ Frontend clients should listen for this event and append the reading to local da
 ## Background Job
 
 The backend uses `node-cron` to generate one mock temperature reading every 5 seconds.
+
+The generator only starts when this environment variable is enabled:
+
+```env
+ENABLE_GENERATOR=true
+```
+
+Set it to `false` when you want the backend to stay online without inserting new mock readings.
 
 Flow:
 

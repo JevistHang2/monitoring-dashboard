@@ -15,4 +15,5 @@ export const env = {
   mongodbUri: process.env.MONGODB_URI as string,
   frontendUrl: process.env.FRONTEND_URL ?? "http://localhost:3000",
   nodeEnv: process.env.NODE_ENV ?? "development",
+  enableGenerator: process.env.ENABLE_GENERATOR === "true",
 };
