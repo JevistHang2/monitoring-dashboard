@@ -10,6 +10,6 @@ export async function getTemperatureReadings(): Promise<TemperatureReading[]> {
 
   return handleApiResponse<TemperatureReading[]>(
     response,
-    "Failed to get temperature data",
+    "Failed to get temperature readings",
   );
 }

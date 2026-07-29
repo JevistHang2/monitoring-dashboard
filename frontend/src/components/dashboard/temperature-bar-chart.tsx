@@ -8,6 +8,10 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart";
+import {
+  TEMPERATURE_MAX_VALUE,
+  TEMPERATURE_MIN_VALUE,
+} from "@/constants/temperature-constant";
 import { formatReadingTime } from "@/lib/timezone";
 import type { TemperatureReading, Timezone } from "@/types/temperature";
 
@@ -50,7 +54,12 @@ export function TemperatureBarChart({
             axisLine={false}
             tickMargin={8}
           />
-          <YAxis tickLine={false} axisLine={false} tickMargin={8} />
+          <YAxis
+            domain={[TEMPERATURE_MIN_VALUE, TEMPERATURE_MAX_VALUE]}
+            tickLine={false}
+            axisLine={false}
+            tickMargin={8}
+          />
           <ChartTooltip content={<ChartTooltipContent />} />
           <Bar dataKey="value" fill="var(--color-value)" radius={4} />
         </BarChart>

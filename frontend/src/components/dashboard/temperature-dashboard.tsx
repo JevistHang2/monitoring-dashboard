@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Clock, Thermometer, TrendingDown, TrendingUp } from "lucide-react";
 
+import { getTemperatureReadings } from "@/api/temperature-api";
 import { ConnectionStatus } from "@/components/dashboard/connection-status";
 import { DashboardTemplate } from "@/components/dashboard/dashboard-template";
 import { MetricCard } from "@/components/dashboard/metric-card";
@@ -10,25 +11,69 @@ import { ReadingsTable } from "@/components/dashboard/readings-table";
 import { TemperatureBarChart } from "@/components/dashboard/temperature-bar-chart";
 import { TemperatureLineChart } from "@/components/dashboard/temperature-line-chart";
 import { TimezoneSelect } from "@/components/dashboard/timezone-select";
-
+import { ErrorState } from "@/components/feedback/error-state";
 import {
   DEFAULT_TIMEZONE,
   MAX_READINGS,
 } from "@/constants/temperature-constant";
+import { createSocket } from "@/lib/socket";
 import { formatTemperature } from "@/lib/temperature-format";
+import { formatReadingTime } from "@/lib/timezone";
 import type {
   SocketConnectionStatus,
   TemperatureReading,
   Timezone,
 } from "@/types/temperature";
-import { ErrorState } from "../feedback/error-state";
-import { formatReadingTime } from "@/lib/timezone";
-import { createSocket } from "@/lib/socket";
 
 type TemperatureDashboardProps = {
   initialReadings: TemperatureReading[];
   initialErrorMessage?: string;
 };
+
+type TemperatureMetrics = {
+  latest: number | null;
+  lastUpdatedAt: string | null;
+  minimum: number | null;
+  maximum: number | null;
+};
+
+function appendReading(
+  currentReadings: TemperatureReading[],
+  reading: TemperatureReading,
+): TemperatureReading[] {
+  const alreadyExists = currentReadings.some(
+    (currentReading) => currentReading.created_at === reading.created_at,
+  );
+
+  if (alreadyExists) {
+    return currentReadings;
+  }
+
+  return [...currentReadings, reading].slice(-MAX_READINGS);
+}
+
+function getTemperatureMetrics(
+  readings: TemperatureReading[],
+): TemperatureMetrics {
+  if (readings.length === 0) {
+    return {
+      latest: null,
+      lastUpdatedAt: null,
+      minimum: null,
+      maximum: null,
+    };
+  }
+
+  const values = readings.map((reading) => reading.value);
+  const latestReading = readings[readings.length - 1];
+
+  return {
+    latest: latestReading.value,
+    lastUpdatedAt: latestReading.created_at,
+    minimum: Math.min(...values),
+    maximum: Math.max(...values),
+  };
+}
 
 export function TemperatureDashboard({
   initialReadings,
@@ -40,15 +85,36 @@ export function TemperatureDashboard({
   const [readings, setReadings] = useState<TemperatureReading[]>(
     initialReadings.slice(-MAX_READINGS),
   );
+  const [initialLoadError, setInitialLoadError] = useState(initialErrorMessage);
 
   useEffect(() => {
+    async function syncReadings() {
+      try {
+        const latestReadings = await getTemperatureReadings();
+
+        setReadings(latestReadings.slice(-MAX_READINGS));
+        setInitialLoadError(undefined);
+      } catch (error) {
+        setInitialLoadError(
+          error instanceof Error
+            ? error.message
+            : "Failed to load temperature readings",
+        );
+      }
+    }
+
     const socket = createSocket();
 
     socket.on("connect", () => {
       setConnectionStatus("connected");
+      void syncReadings();
     });
 
     socket.on("disconnect", () => {
+      setConnectionStatus("disconnected");
+    });
+
+    socket.on("connect_error", () => {
       setConnectionStatus("disconnected");
     });
 
@@ -56,41 +122,27 @@ export function TemperatureDashboard({
       setConnectionStatus("reconnecting");
     });
 
+    socket.io.on("reconnect", () => {
+      void syncReadings();
+      setConnectionStatus("connected");
+    });
+
     socket.on("new-data", (reading) => {
-      setReadings((currentReadings) =>
-        [...currentReadings, reading].slice(-MAX_READINGS),
-      );
+      setReadings((currentReadings) => appendReading(currentReadings, reading));
     });
 
     return () => {
       socket.off("connect");
       socket.off("disconnect");
-      socket.off("new-data");
+      socket.off("connect_error");
       socket.io.off("reconnect_attempt");
+      socket.io.off("reconnect");
+      socket.off("new-data");
       socket.disconnect();
     };
   }, []);
 
-  const metrics = useMemo(() => {
-    if (readings.length === 0) {
-      return {
-        latest: null,
-        lastUpdatedAt: null,
-        minimum: null,
-        maximum: null,
-      };
-    }
-
-    const values = readings.map((reading) => reading.value);
-    const latest = readings[readings.length - 1].value;
-
-    return {
-      latest,
-      lastUpdatedAt: readings[readings.length - 1].created_at,
-      minimum: Math.min(...values),
-      maximum: Math.max(...values),
-    };
-  }, [readings]);
+  const metrics = useMemo(() => getTemperatureMetrics(readings), [readings]);
 
   const lastUpdatedLabel = metrics.lastUpdatedAt
     ? formatReadingTime(metrics.lastUpdatedAt, timezone)
@@ -99,10 +151,10 @@ export function TemperatureDashboard({
   return (
     <DashboardTemplate
       notice={
-        initialErrorMessage && (
+        initialLoadError && (
           <ErrorState
             title="Unable to load initial data"
-            message={initialErrorMessage}
+            message={initialLoadError}
           />
         )
       }
