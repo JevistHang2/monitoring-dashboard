@@ -182,6 +182,25 @@ generate mock temperature -> save to MongoDB -> broadcast new-data
 
 Mock temperature values are generated between `1` and `100`.
 
+## Deployment
+
+The backend is deployed on Railway:
+
+```text
+https://monitoring-dashboard-production-3460.up.railway.app
+```
+
+Production environment variables:
+
+```env
+MONGODB_URI=your-production-mongodb-uri
+FRONTEND_URL=https://your-frontend-url.example.com
+NODE_ENV=production
+ENABLE_GENERATOR=false
+```
+
+Railway provides `PORT` automatically. Set `ENABLE_GENERATOR=true` only when you want the deployed backend to generate live demo readings.
+
 ## Database
 
 MongoDB stores temperature readings in a collection generated from the Mongoose `TemperatureReading` model.
