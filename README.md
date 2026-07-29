@@ -2,6 +2,8 @@
 
 Full-stack temperature monitoring dashboard built with a Next.js frontend and an Express backend. The backend generates mock temperature readings every 5 seconds, stores them in MongoDB, exposes initial readings through REST, and broadcasts new readings with Socket.IO. The frontend server-renders the initial readings, then updates the dashboard live in the browser.
 
+Repository: https://github.com/JevistHang2/monitoring-dashboard
+
 ## Tech Stack
 
 - Frontend: Next.js 14, TypeScript, Tailwind CSS, shadcn/ui, Recharts, Socket.IO Client
@@ -30,6 +32,12 @@ monitoring-dashboard/
 - Connection status badge for Socket.IO state
 
 ## Local Setup
+
+Prerequisites:
+
+- Node.js 20 or newer
+- npm
+- MongoDB running locally, or a MongoDB Atlas connection string
 
 ### Backend
 
@@ -172,6 +180,7 @@ cd backend
 npm run dev
 npm run build
 npm run start
+npm run test
 ```
 
 Frontend:
@@ -182,6 +191,7 @@ npm run dev
 npm run build
 npm run lint
 npm run format:check
+npm run test
 ```
 
 ## Testing
@@ -222,10 +232,6 @@ Implemented frontend test coverage:
 - Dashboard timezone display updates when the selected timezone changes
 - Dashboard appends incoming Socket.IO `new-data` readings without a page reload
 
-Planned frontend test coverage:
-
-- Socket.IO listener cleanup on dashboard unmount
-
 ## Deployment
 
 Recommended deployment targets:
@@ -234,14 +240,19 @@ Recommended deployment targets:
 - Backend: Render or Railway
 - Database: MongoDB Atlas
 
-Production environment variables:
+### Backend Deployment
 
-Frontend:
+1. Create a MongoDB Atlas cluster and copy the connection string.
+2. Deploy the `backend/` directory to Railway or Render as a Node.js service.
+3. Set the backend start command to:
 
-```env
-NEXT_PUBLIC_API_URL=https://monitoring-dashboard-production-3460.up.railway.app
-NEXT_PUBLIC_SOCKET_URL=https://monitoring-dashboard-production-3460.up.railway.app
+```bash
+npm run build && npm run start
 ```
+
+4. Configure the backend environment variables:
+
+Production environment variables:
 
 Backend:
 
@@ -252,6 +263,26 @@ FRONTEND_URL=https://monitoring-dashboard-lemon.vercel.app
 NODE_ENV=production
 ENABLE_GENERATOR=false
 ```
+
+5. Confirm these production endpoints work:
+
+```text
+GET /health
+GET /api/data
+Socket.IO event: new-data
+```
+
+### Frontend Deployment
+
+1. Deploy the `frontend/` directory to Vercel as a Next.js app.
+2. Configure the frontend environment variables:
+
+```env
+NEXT_PUBLIC_API_URL=https://monitoring-dashboard-production-3460.up.railway.app
+NEXT_PUBLIC_SOCKET_URL=https://monitoring-dashboard-production-3460.up.railway.app
+```
+
+3. Confirm the deployed frontend can fetch initial data and receive Socket.IO updates from the backend.
 
 The deployed frontend is currently hosted on Vercel:
 
