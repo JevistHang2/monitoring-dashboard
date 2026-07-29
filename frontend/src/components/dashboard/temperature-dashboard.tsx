@@ -107,7 +107,6 @@ export function TemperatureDashboard({
 
     socket.on("connect", () => {
       setConnectionStatus("connected");
-      void syncReadings();
     });
 
     socket.on("disconnect", () => {
@@ -123,7 +122,7 @@ export function TemperatureDashboard({
     });
 
     socket.io.on("reconnect", () => {
-      void syncReadings();
+      syncReadings();
       setConnectionStatus("connected");
     });
 
