@@ -154,3 +154,5 @@ Current coverage:
 - Timezone formatting
 - Timezone select display label
 - Timezone select change handler
+- Dashboard timezone display behavior
+- Dashboard real-time update behavior when Socket.IO receives `new-data`
